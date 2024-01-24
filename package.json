@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "start:dev": "npx nodemon",
+    "start:dev": "nodemon",
     "serve": "nodemon ./serve.ts",
     "build": "tsc"
   },
@@ -19,7 +19,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.2",
     "nodemailer": "^6.7.8",
-    "nodemon": "^2.0.19",
     "socket.io": "^4.7.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
@@ -32,7 +31,8 @@
     "@types/node": "^18.7.3",
     "@types/nodemailer": "^6.4.5",
     "@types/socket.io": "^3.0.2",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "nodemon": "^2.0.19"
   },
   "description": "This tutorial made for beginners.",
   "author": ""
