@@ -1,7 +1,7 @@
 /** @format */
 
 import mongoose from "mongoose";
-import { createFalse } from "typescript";
+
 const Schema = mongoose.Schema;
 
 // Basic Schema

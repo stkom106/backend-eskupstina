@@ -4,6 +4,9 @@ import Vote from "./vote"
 
 const API = (router: any) => {
     // APIs for Auth
+    router.get('/test', (req: any, res: any) => {
+        res.send("Hello World!");
+    });
     router.post("/login", AUTH.login);
     router.get("/get_agenda", Agenda.get_agenda);
     router.post("/users", AUTH.get_users);

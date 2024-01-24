@@ -1,6 +1,6 @@
 require("dotenv").config();
 
 export = {
-    mongoURI: "mongodb://localhost:27017/db_voting",
+    mongoURI: process.env.MONGO_URI || "mongodb://localhost:27017/ChatApp",
     secretOrKey: process.env.TOKEN_SECRET,
 };

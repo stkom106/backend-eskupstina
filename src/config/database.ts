@@ -9,6 +9,7 @@ const ConnectDatabase = async (mongoUrl: string) => {
         };
 
         const result: any = await mongoose.connect(mongoUrl, connectOptions);
+        
 
         if (result) {
             console.log("MongoDB connected");
