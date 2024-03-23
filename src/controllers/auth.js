@@ -1,7 +1,7 @@
-import { UserSchema } from "../models";
+const { UserSchema } = require("../models");
 
 const Auth = {
-  create: async (props: any) => {
+  create: async (props) => {
     const { name, email, password, role, city } = props;
 
     try {
@@ -21,36 +21,36 @@ const Auth = {
       }
 
       return saveData;
-    } catch (err: any) {
+    } catch (err) {
       throw new Error(err.message);
     }
   },
-  findOne: async (props: any) => {
+  findOne: async (props) => {
     const { filter } = props;
 
     try {
       const result = await UserSchema.findOne(filter);
 
       return result;
-    } catch (err: any) {
+    } catch (err) {
       throw new Error(err.message);
     }
   },
-  fintByCity: async (props: any) => {
+  fintByCity: async (props) => {
     const { param } = props;
     try {
-      const user: any = await UserSchema.findOne(param);
+      const user = await UserSchema.findOne(param);
       const result = await UserSchema.find({ city: user.city });
 
       return result;
-    } catch (err: any) {
+    } catch (err) {
       throw new Error(err.message);
     }
   },
 
-  authenticateUser: async (props: any) => {
+  authenticateUser: async (props) => {
     const { email, password } = props;
-    function isValidEmail(email: string): boolean {
+    function isValidEmail(email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     }
@@ -62,10 +62,10 @@ const Auth = {
       const result = await UserSchema.findOne({ email, password });
 
       return result;
-    } catch (err: any) {
+    } catch (err) {
       throw new Error(err.message);
     }
   },
 };
 
-export default Auth;
+module.exports = Auth;

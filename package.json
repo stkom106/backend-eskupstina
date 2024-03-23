@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
+    "start": "node ./src/index.js",
     "start:dev": "nodemon",
     "serve": "nodemon ./serve.ts",
     "build": "tsc"
