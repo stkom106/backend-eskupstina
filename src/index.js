@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const { createServer } = require("http");
+const path = require("path");
 
 // Importing routes from ./apis.js
 const API = require("./apis");
@@ -20,6 +21,9 @@ app.use(cors({ origin: "*", methods: ["POST", "GET"] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from the React build directory
+app.use(express.static(path.join(__dirname, "client", "build")));
+
 // Define routes
 const router = express.Router();
 API(router);
@@ -28,6 +32,11 @@ app.use("/api", router);
 // Welcome message route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to my API!" });
+});
+
+// Serve the React application for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 // Connect to MongoDB database
