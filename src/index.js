@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { createServer } = require("http");
+const http = require("http");
 const path = require("path");
 
 // Importing routes from ./apis.js
@@ -43,15 +43,23 @@ app.get("/", (req, res) => {
 ConnectDatabase(String(config.mongoURI));
 
 // Start the server
-const server = app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
-});
+// const server = app.listen(port, () => {
+//   console.log(`Server listening on http://localhost:${port}`);
+// });
 
 // Initialize Socket.IO
-const httpServer = createServer(server);
+// const httpServer = createServer(server);
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "*",
+//   },
+// });
+
+const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   },
 });
 
@@ -75,10 +83,15 @@ io.on("connection", (socket) => {
 });
 
 // Start listening for Socket.IO connections
-httpServer.listen(4000, () => {
-  console.log("Socket.IO server listening on port 4000");
-});
+// httpServer.listen(4000, () => {
+//   console.log("Socket.IO server listening on port 4000");
+// });
 const socketPort = httpServer.address();
 app.get("/socketPort", (req, res) => {
   res.json({ port: socketPort });
+});
+httpServer.listen(port, () => {
+  /* eslint-disable no-console */
+  console.log(`Listening: http://localhost:${port}`);
+  /* eslint-enable no-console */
 });
