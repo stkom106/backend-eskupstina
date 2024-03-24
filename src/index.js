@@ -35,9 +35,9 @@ app.get("/", (req, res) => {
 });
 
 // Serve the React application for all other routes
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+// });
 
 // Connect to MongoDB database
 ConnectDatabase(String(config.mongoURI));
@@ -77,4 +77,8 @@ io.on("connection", (socket) => {
 // Start listening for Socket.IO connections
 httpServer.listen(4000, () => {
   console.log("Socket.IO server listening on port 4000");
+});
+const socketPort = httpServer.address();
+app.get("/socketPort", (req, res) => {
+  res.json({ port: socketPort });
 });
