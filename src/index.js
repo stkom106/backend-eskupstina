@@ -74,11 +74,11 @@ io.on("connection", (socket) => {
   });
   socket.on("vote_update", function (message, id) {
     console.log("update", id);
-    io.emit("vote_update", id);
+    io.emit("vote_update", message, id);
   });
   socket.on("vote_close", function (message, id) {
     console.log("close", id);
-    io.emit("vote_close", message, id);
+    io.emit("vote_close", id);
   });
 });
 
