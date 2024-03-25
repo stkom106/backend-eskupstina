@@ -4,6 +4,12 @@ const fs = require("fs");
 // get_agenda
 const get_agenda = async (req, res, next) => {
   try {
+    const { id } = req.query;
+    if (id) {
+      const agenda = await controllers.Agenda.findOne({ filter: id });
+      console;
+      res.status(200).json({ data: agenda });
+    }
     const agendas = await controllers.Agenda.find("");
     res.status(200).json({ data: agendas });
   } catch (err) {
@@ -89,11 +95,9 @@ const do_vote = async (req, res, next) => {
   try {
     const { user_id, agenda_id, decision } = req.body;
     if (!user_id || !agenda_id || !decision) {
-      res
-        .status(400)
-        .json({
-          error: "user_id, agenda_id, or decision parameter is missing",
-        });
+      res.status(400).json({
+        error: "user_id, agenda_id, or decision parameter is missing",
+      });
       return;
     }
     let agenda = await controllers.Agenda.findOne({

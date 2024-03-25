@@ -9,6 +9,7 @@ const API = (router) => {
   });
   router.post("/login", AUTH.login);
   router.get("/get_agenda", Agenda.get_agenda);
+  router.get("/get_agenda_by_id", Vote.get_vote);
   router.post("/users", AUTH.get_users);
   router.get("/pdf", Agenda.show_pdf);
   router.post("/vote", Agenda.do_vote);
