@@ -68,17 +68,17 @@ io.on("connection", (socket) => {
   socket.on("disconnect", function () {
     console.log("user disconnected");
   });
-  socket.on("message", function (message) {
-    console.log(message);
-    io.emit("message", message);
+  socket.on("message", function (message, id) {
+    console.log("message", id);
+    io.emit("message", message, id);
   });
-  socket.on("vote_update", function (message) {
-    console.log(message);
-    io.emit("vote_update", message);
+  socket.on("vote_update", function (message, id) {
+    console.log("update", id);
+    io.emit("vote_update", id);
   });
-  socket.on("vote_close", function (message) {
-    console.log(message);
-    io.emit("vote_close", message);
+  socket.on("vote_close", function (message, id) {
+    console.log("close", id);
+    io.emit("vote_close", message, id);
   });
 });
 

@@ -94,9 +94,9 @@ const close_vote = async (req, res, next) => {
 const do_vote = async (req, res, next) => {
   try {
     const { user_id, agenda_id, decision } = req.body;
-    if (!user_id || !agenda_id || !decision) {
+    if (!user_id || !agenda_id) {
       res.status(400).json({
-        error: "user_id, agenda_id, or decision parameter is missing",
+        error: "user_id, agenda_id, or decision parametffjfodhf",
       });
       return;
     }

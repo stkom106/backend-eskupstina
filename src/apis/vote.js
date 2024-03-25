@@ -5,7 +5,8 @@ const { VoteSchema } = require("../models");
 // do_vote
 const do_vote = async (req, res, next) => {
   try {
-    const { user_id, agenda_id, decision } = req.body;
+    const { user_id, agenda_id, decision = 1 } = req.body;
+
     const vote = await controllers.Vote.create({
       user_id: user_id,
       agenda_item_id: agenda_id,
