@@ -26,7 +26,7 @@ const show_pdf = async (req, res, next) => {
       res.status(400).json({ error: "agenda parameter is missing" });
       return;
     }
-    const filePath = `./public/agenda${agendaId}.pdf`;
+    const filePath = `./public/${agendaId}`;
     const data = fs.readFileSync(filePath);
     res.contentType("application/pdf");
     res.send(data);
