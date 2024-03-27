@@ -47,6 +47,15 @@ const Auth = {
       throw new Error(err.message);
     }
   },
+  findAll: async () => {
+    try {
+      const result = await UserSchema.find();
+
+      return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  },
 
   authenticateUser: async (props) => {
     const { email, password } = props;

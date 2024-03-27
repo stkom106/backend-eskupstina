@@ -83,9 +83,20 @@ const get_users = async (req, res, next) => {
     res.status(401).end();
   }
 };
+const get_tv_users = async (req, res, next) => {
+  try {
+    // const { id } = req.body;
+    const users = await controllers.Auth.findAll();
+    res.status(200).json({ data: users });
+  } catch (err) {
+    console.log(err.message);
+    res.status(401).end();
+  }
+};
 
 module.exports = {
   login,
   middleware,
   get_users,
+  get_tv_users,
 };

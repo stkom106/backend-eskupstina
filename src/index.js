@@ -62,9 +62,17 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   },
 });
-
+let liveVotingResults;
 // Handle socket connections
 io.on("connection", (socket) => {
+  if (liveVotingResults) {
+    socket.emit("live_voting_results", liveVotingResults);
+  }
+  socket.on("vote_start", function (id) {
+    liveVotingResults = id;
+    io.emit("vote_start", id);
+    // socket.emit("live_voting_results", liveVotingResults);
+  });
   socket.on("disconnect", function () {
     console.log("user disconnected");
   });
@@ -74,11 +82,18 @@ io.on("connection", (socket) => {
   });
   socket.on("vote_update", function (message, id) {
     console.log("update", id);
+    liveVotingResults = id;
     io.emit("vote_update", message, id);
   });
   socket.on("vote_close", function (message, id) {
     console.log("close", id);
     io.emit("vote_close", id);
+    io.emit("live_voting_results", liveVotingResults);
+  });
+  socket.on("vote_reset", function (message, id) {
+    liveVotingResults = null;
+    io.emit("vote_reset", id);
+    io.emit("live_voting_results", liveVotingResults);
   });
 });
 
