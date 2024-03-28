@@ -1,6 +1,7 @@
 const AUTH = require("./auth");
 const Agenda = require("./agenda");
 const Vote = require("./vote");
+const PDF = require("./pdf");
 
 const API = (router) => {
   // APIs for Auth
@@ -13,6 +14,7 @@ const API = (router) => {
   router.post("/users", AUTH.get_users);
   router.get("/tv-users", AUTH.get_tv_users);
   router.get("/pdf", Agenda.show_pdf);
+  router.get("/pdf-blob", PDF.get_pdf_blob);
   router.post("/vote", Agenda.do_vote);
   router.get("/get_vote", Vote.get_vote);
   router.post("/start_vote", Agenda.start_vote);
