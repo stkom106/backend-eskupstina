@@ -144,7 +144,7 @@ const reset_vote = async (req, res, next) => {
     const filter = { _id: agenda_id };
     const updateDoc = {
       $set: {
-        vote_info: "null",
+        vote_info: null,
         vote_state: 0,
       },
     };

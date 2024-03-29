@@ -4,13 +4,13 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const http = require("http");
 const path = require("path");
-
 // Importing routes from ./apis.js
 const API = require("./apis");
-
+const controllers = require("./controllers");
 // Importing database configuration
 const config = require("./config");
 const ConnectDatabase = require("./config/database");
+const vote = require("./models/vote");
 
 // Create an Express app
 const app = express();
@@ -63,36 +63,61 @@ const io = new Server(httpServer, {
   },
 });
 let liveVotingResults;
+let agenda;
 // Handle socket connections
 io.on("connection", (socket) => {
   if (liveVotingResults) {
     socket.emit("live_voting_results", liveVotingResults);
   }
-  socket.on("vote_start", function (id) {
+
+  socket.on("vote_start", (id, agendaObj) => {
     liveVotingResults = id;
-    io.emit("vote_start", id);
-    // socket.emit("live_voting_results", liveVotingResults);
+    agenda = agendaObj;
+    console.log("voting start for agenda => ", agendaObj);
+    io.emit("vote_start", id, agendaObj);
   });
-  socket.on("disconnect", function () {
+
+  socket.on("disconnect", () => {
     console.log("user disconnected");
   });
-  socket.on("message", function (message, id) {
+
+  socket.on("message", (message, id) => {
     console.log("message", id);
     io.emit("message", message, id);
   });
-  socket.on("vote_update", function (message, id) {
-    console.log("update", id);
+
+  socket.on("vote_update", async (message, id, voteUpdate) => {
+    console.log("update", agenda, id, voteUpdate);
     liveVotingResults = id;
-    io.emit("vote_update", message, id);
+    agenda = agenda || {}; // Initialize agenda if it's not already set
+    agenda.vote_info = JSON.stringify([
+      ...JSON.parse(agenda.vote_info || "[]"),
+
+      voteUpdate,
+    ]);
+    console.log("after updating sending user this", message, id, agenda);
+    io.emit("vote_update", message, id, agenda);
+    try {
+      const filter = { _id: id };
+      const updateDoc = {
+        vote_info: agenda.vote_info,
+      };
+      const options = { upsert: true };
+      await controllers.Agenda.update({ filter, updateDoc, options });
+    } catch (error) {
+      console.error("Error saving vote:", error);
+    }
   });
-  socket.on("vote_close", function (message, id) {
+
+  socket.on("vote_close", (message, id) => {
     console.log("close", id);
     io.emit("vote_close", id);
     io.emit("live_voting_results", liveVotingResults);
   });
-  socket.on("vote_reset", function (message, id) {
+
+  socket.on("vote_reset", (message, id) => {
     liveVotingResults = null;
-    io.emit("vote_reset", id);
+    io.emit("vote_reset");
     io.emit("live_voting_results", liveVotingResults);
   });
 });
