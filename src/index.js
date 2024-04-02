@@ -111,14 +111,16 @@ io.on("connection", (socket) => {
 
   socket.on("vote_close", (message, id) => {
     console.log("close", id);
-    io.emit("vote_close", id);
+    io.emit("vote_close", id, agenda);
     io.emit("live_voting_results", liveVotingResults);
+    agenda = null;
   });
 
   socket.on("vote_reset", (message, id) => {
     liveVotingResults = null;
     io.emit("vote_reset");
     io.emit("live_voting_results", liveVotingResults);
+    agenda = null;
   });
 });
 

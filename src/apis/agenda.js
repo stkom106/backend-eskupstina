@@ -96,7 +96,7 @@ const do_vote = async (req, res, next) => {
     const { user_id, agenda_id, decision } = req.body;
     if (!user_id || !agenda_id) {
       res.status(400).json({
-        error: "user_id, agenda_id, or decision parametffjfodhf",
+        error: "user_id, agenda_id, or decision parameter is missings.",
       });
       return;
     }
