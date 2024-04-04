@@ -2,7 +2,8 @@ const AUTH = require("./auth");
 const Agenda = require("./agenda");
 const Vote = require("./vote");
 const PDF = require("./pdf");
-
+const multer = require("multer");
+const upload = multer();
 const API = (router) => {
   // APIs for Auth
   router.get("/test", (req, res) => {
@@ -10,6 +11,7 @@ const API = (router) => {
   });
   router.post("/login", AUTH.login);
   router.get("/get_agenda", Agenda.get_agenda);
+  router.post("/agenda", upload.single("pdf_path"), Agenda.createAgenda);
   router.get("/get_agenda_by_id", Vote.get_vote);
   router.post("/users", AUTH.get_users);
   router.get("/tv-users", AUTH.get_tv_users);

@@ -2,13 +2,14 @@ const { AgendaSchema } = require("../models");
 
 const Agenda = {
   create: async (props) => {
-    const { name, description, pdf } = props;
+    const { name, description, pdf, agenda_type } = props;
 
     try {
       const newData = new AgendaSchema({
         name: name,
         description: description,
         pdf_path: pdf,
+        agenda_type: agenda_type,
       });
 
       const saveData = await newData.save();

@@ -24,6 +24,10 @@ const BasicSchema = new Schema({
     type: Number,
     default: 0,
   },
+  agenda_type: {
+    type: String,
+    default: "pre_agenda",
+  },
   vote_info: {
     type: String,
     default: "",

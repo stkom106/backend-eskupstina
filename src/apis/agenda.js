@@ -1,5 +1,51 @@
 const controllers = require("../controllers");
 const fs = require("fs");
+const azure = require("azure-storage");
+// create agenda
+const blobService = azure.createBlobService(
+  process.env.AZURE_STORAGE_ACCOUNT_STORAGE_STRING
+);
+
+const createAgenda = async (req, res) => {
+  try {
+    // Retrieve other form data
+    const { title, description, agenda_type } = req.body;
+
+    // Handle file
+    const { buffer, originalname } = req.file;
+
+    // Upload file to Azure Blob Storage
+    const blobName = originalname; // Use original file name as blob name
+    await new Promise((resolve, reject) => {
+      blobService.createBlockBlobFromText(
+        "mainpdf",
+        blobName,
+        buffer,
+        (error, result, response) => {
+          if (error) {
+            console.error("Error uploading file to Azure Blob Storage:", error);
+            return reject(error);
+          }
+          resolve(result);
+        }
+      );
+    });
+
+    // Create agenda in database
+    const pdf_path = blobName; // Use blob name as PDF path
+    const agenda = await controllers.Agenda.create({
+      name: title,
+      description: description,
+      pdf: pdf_path,
+      agenda_type: agenda_type,
+    });
+
+    res.status(200).json({ data: agenda });
+  } catch (error) {
+    console.error("Error processing file upload:", error);
+    res.status(500).json({ error: "Error processing file upload" });
+  }
+};
 
 // get_agenda
 const get_agenda = async (req, res, next) => {
@@ -164,6 +210,7 @@ const reset_vote = async (req, res, next) => {
 };
 
 module.exports = {
+  createAgenda,
   get_agenda,
   show_pdf,
   start_vote,
