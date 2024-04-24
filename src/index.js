@@ -11,11 +11,10 @@ const controllers = require("./controllers");
 const config = require("./config");
 const ConnectDatabase = require("./config/database");
 const vote = require("./models/vote");
-const { log } = require("console");
 
 // Create an Express app
 const app = express();
-const port = Number(process.env.HTTP_PORT || 5005);
+const port = Number(process.env.HTTP_PORT || 8080);
 
 // Apply middleware
 app.use(cors({ origin: "*", methods: ["POST", "GET"] }));
@@ -104,7 +103,6 @@ io.on("connection", (socket) => {
       const updateDoc = {
         vote_info: agenda.vote_info,
       };
-
       const options = { upsert: true };
       await controllers.Agenda.update({ filter, updateDoc, options });
     } catch (error) {
