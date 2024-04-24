@@ -80,7 +80,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    io.emit("disconnect");
+    io.emit("user_disconnected");
   });
 
   socket.on("message", (message, id) => {
