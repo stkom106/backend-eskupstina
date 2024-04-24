@@ -79,7 +79,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    // io.emit("disconnect");
+    io.emit("disconnect");
   });
 
   socket.on("message", (message, id) => {
@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
 
       voteUpdate,
     ]);
-    console.log("after updating sending user asdfsathis", message, id, agenda);
+    console.log("after updating sending user this", message, id, agenda);
     io.emit("vote_update", message, id, agenda);
     try {
       const filter = { _id: id };
