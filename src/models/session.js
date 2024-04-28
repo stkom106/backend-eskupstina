@@ -2,8 +2,11 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
-// Basic Schema
-const BasicSchema = new Schema({
+const sessionSchema = new Schema({
+  name: {
+    type: String,
+    default: "",
+  },
   start_time: {
     type: String,
     default: "",
@@ -16,6 +19,7 @@ const BasicSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  agendas: [{ type: Schema.Types.ObjectId, ref: "agenda" }], // Array of agenda references
 });
 
-module.exports = mongoose.model("session", BasicSchema);
+module.exports = mongoose.model("session", sessionSchema);

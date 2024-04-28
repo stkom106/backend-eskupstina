@@ -49,6 +49,14 @@ const Agenda = {
       throw new Error(err.message);
     }
   },
+  findAll: async () => {
+    try {
+      const allSessions = await AgendaSchema.find();
+      return allSessions;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  },
 };
 
 module.exports = Agenda;
