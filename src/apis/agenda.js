@@ -9,7 +9,7 @@ const blobService = azure.createBlobService(
 const createAgenda = async (req, res) => {
   try {
     // Retrieve other form data
-    const { title, description, agenda_type } = req.body;
+    const { title, description, agenda_type, session } = req.body;
 
     // Handle file
     const { buffer, originalname } = req.file;
@@ -38,6 +38,7 @@ const createAgenda = async (req, res) => {
       description: description,
       pdf: pdf_path,
       agenda_type: agenda_type,
+      session_id: session,
     });
 
     res.status(200).json({ data: agenda });
@@ -208,6 +209,34 @@ const reset_vote = async (req, res, next) => {
     res.status(401).end();
   }
 };
+const delete_agenda = async (req, res, next) => {
+  try {
+    const agenda_item_id = req.params.id;
+    if (!agenda_item_id) {
+      res.status(400).json({ error: "agenda_item_id parameter is missing" });
+      return;
+    }
+    const filter = { _id: agenda_item_id };
+    const result = await controllers.Agenda.delete({ filter });
+    if (result.deletedCount === 0) {
+      res.status(404).json({ error: "Agenda item not found" });
+      return;
+    }
+
+    const removedFromSession = controllers.Session.removeAgenda(agenda_item_id);
+
+    if (!removedFromSession) {
+      res.status(404).json({ error: "Agenda item not deleted from session" });
+      return;
+    }
+    res
+      .status(200)
+      .json({ status: 1, message: "Agenda item deleted successfully" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 module.exports = {
   createAgenda,
@@ -217,4 +246,5 @@ module.exports = {
   close_vote,
   do_vote,
   reset_vote,
+  delete_agenda, // Add the delete_agenda function to module exports
 };

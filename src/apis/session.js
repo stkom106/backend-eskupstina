@@ -29,6 +29,30 @@ const get_all_sessions = async (req, res) => {
   }
 };
 
+const delete_session = async (req, res, next) => {
+  try {
+    const session_item_id = req.params.id;
+    if (!session_item_id) {
+      res.status(400).json({ error: "session_item_id parameter is missing" });
+      return;
+    }
+    const result = await controllers.Session.delete(session_item_id);
+    console.log(result);
+    if (result.deletedCount == 0) {
+      res.status(404).json({ error: "Session item not found" });
+      return;
+    }
+
+    res
+      .status(200)
+      .json({ status: 1, message: "Session item deleted successfully" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   get_all_sessions,
+  delete_session,
 };

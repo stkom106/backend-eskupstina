@@ -24,6 +24,8 @@ const API = (router) => {
   router.post("/start_vote", Agenda.start_vote);
   router.post("/close_vote", Agenda.close_vote);
   router.post("/reset_vote", Agenda.reset_vote);
+  router.delete("/agenda/:id", Agenda.delete_agenda);
+  router.delete("/session/:id", Session.delete_session);
 };
 
 module.exports = API;
