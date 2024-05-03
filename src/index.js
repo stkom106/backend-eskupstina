@@ -17,7 +17,7 @@ const app = express();
 const port = Number(process.env.HTTP_PORT || 5005);
 
 // Apply middleware
-app.use(cors({ origin: "*", methods: ["POST", "GET", "DELETE"] }));
+app.use(cors({ origin: "*", methods: ["POST", "GET", "DELETE", "PUT"] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -48,6 +48,52 @@ const createAgenda = async (req, res) => {
   }
 };
 
+const updateAgenda = async (req, res) => {
+  try {
+    const { title, description, agenda_type, session } = req.body;
+    const { id } = req.query;
+
+    let pdf_path;
+    if (req.file) {
+      const { buffer, originalname } = req.file;
+      const blobName = originalname;
+      await new Promise((resolve, reject) => {
+        blobService.createBlockBlobFromText(
+          "mainpdf",
+          blobName,
+          buffer,
+          (error, result, response) => {
+            if (error) {
+              console.error(
+                "Error uploading file to Azure Blob Storage:",
+                error
+              );
+              return reject(error);
+            }
+            resolve(result);
+          }
+        );
+      });
+      pdf_path = blobName;
+      console.log(pdf_path);
+    }
+
+    const agenda = await controllers.Agenda.update({
+      name: title,
+      description: description,
+      agenda_type: agenda_type,
+      session_id: session,
+      id: id,
+      pdf: pdf_path,
+    });
+
+    res.status(200).json({ status: 1, data: agenda });
+  } catch (error) {
+    console.error("Error processing file upload:", error);
+    res.status(500).json({ error: "Error processing file upload" });
+  }
+};
+
 // get_agenda
 const get_agenda = async (req, res, next) => {
   try {
@@ -244,6 +290,7 @@ module.exports = {
   show_pdf,
   start_vote,
   close_vote,
+  updateAgenda,
   do_vote,
   reset_vote,
   delete_agenda, // Add the delete_agenda function to module exports

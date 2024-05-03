@@ -1,5 +1,39 @@
 const controllers = require("../controllers");
 
+const createSession = async (req, res) => {
+  try {
+    const { title, start_time, end_time } = req.body;
+
+    const session = await controllers.Session.create({
+      name: title,
+      start_time: start_time,
+      end_time: end_time,
+      agendas: [],
+    });
+
+    res.status(200).json({ status: 1, data: session });
+  } catch (error) {
+    console.error("Error processing file upload:", error);
+    res.status(500).json({ error: "Error processing file upload" });
+  }
+};
+const updateSession = async (req, res) => {
+  try {
+    const { title } = req.body;
+    const { id } = req.query;
+
+    const session = await controllers.Session.update({
+      name: title,
+      id: id,
+    });
+
+    res.status(200).json({ status: 1, data: session });
+  } catch (error) {
+    console.error("Error processing file upload:", error);
+    res.status(500).json({ error: "Error processing file upload" });
+  }
+};
+
 // get_all_sessions
 const get_all_sessions = async (req, res) => {
   try {
@@ -54,5 +88,7 @@ const delete_session = async (req, res, next) => {
 
 module.exports = {
   get_all_sessions,
+  createSession,
   delete_session,
+  updateSession,
 };

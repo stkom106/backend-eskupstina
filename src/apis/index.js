@@ -26,6 +26,9 @@ const API = (router) => {
   router.post("/reset_vote", Agenda.reset_vote);
   router.delete("/agenda/:id", Agenda.delete_agenda);
   router.delete("/session/:id", Session.delete_session);
+  router.post("/create-session", Session.createSession);
+  router.put("/update-session", Session.updateSession);
+  router.put("/update-agenda", upload.single("pdf_path"), Agenda.updateAgenda);
 };
 
 module.exports = API;
