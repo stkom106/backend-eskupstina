@@ -26,8 +26,8 @@ const BasicSchema = new Schema({
     type: String,
     default: "",
   },
-  party_id: {
-    type: Schema.Types.ObjectId,
+  party: {
+    type: String,
     ref: "party",
   },
   createdAt: {

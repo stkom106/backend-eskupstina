@@ -2,8 +2,10 @@ const { UserSchema } = require("../models");
 
 const Auth = {
   create: async (props) => {
-    const { name, email, password, role, city } = props;
+    const { name, email, password, role, city, party } = props;
 
+    console.log("paja");
+    console.log(props);
     try {
       const newData = new UserSchema({
         name: name,
@@ -11,6 +13,7 @@ const Auth = {
         password: password,
         role: role,
         city: city,
+        party: party,
         createdAt: new Date(),
       });
 
@@ -71,6 +74,40 @@ const Auth = {
       const result = await UserSchema.findOne({ email, password });
 
       return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  },
+
+  delete: async (props) => {
+    const { filter } = props;
+    try {
+      const result = await UserSchema.deleteOne(filter);
+      return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  },
+
+  update: async (props) => {
+    const { name, email, password, role, city, party, id } = props;
+
+    try {
+      const user = await UserSchema.findOne({ _id: id });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      user.name = name || user.name;
+      user.email = email || user.email;
+      user.password = password || user.password;
+      user.role = role || user.role;
+      user.city = city || user.city;
+      user.party = party || user.party;
+
+      const updatedUser = await user.save();
+      return updatedUser;
     } catch (err) {
       throw new Error(err.message);
     }

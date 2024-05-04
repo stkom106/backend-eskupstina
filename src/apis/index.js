@@ -29,6 +29,9 @@ const API = (router) => {
   router.post("/create-session", Session.createSession);
   router.put("/update-session", Session.updateSession);
   router.put("/update-agenda", upload.single("pdf_path"), Agenda.updateAgenda);
+  router.delete("/users/:id", AUTH.delete_user);
+  router.post("/create-user", AUTH.createUser);
+  router.put("/update-user", AUTH.updateUser);
 };
 
 module.exports = API;
