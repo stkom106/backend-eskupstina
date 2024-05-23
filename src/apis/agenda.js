@@ -129,9 +129,48 @@ const show_pdf = async (req, res, next) => {
   }
 };
 
+const delete_agenda = async (req, res, next) => {
+  try {
+    const agenda_item_id = req.params.id;
+    if (!agenda_item_id) {
+      res.status(400).json({ error: "agenda_item_id parameter is missing" });
+      return;
+    }
+    const filter = { _id: agenda_item_id };
+    const result = await controllers.Agenda.delete({ filter });
+    if (result.deletedCount === 0) {
+      res.status(404).json({ error: "Agenda item not found" });
+      return;
+    }
+
+    const removedFromSession = controllers.Session.removeAgenda(agenda_item_id);
+
+    if (!removedFromSession) {
+      res.status(404).json({ error: "Agenda item not deleted from session" });
+      return;
+    }
+    res
+      .status(200)
+      .json({ status: 1, message: "Agenda item deleted successfully" });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/* *********************************
+ *********************************
+ *********************************
+ *********************************
+ *********************************
+ *********************************
+ ********************************* */
+
 // start_vote
 const start_vote = async (req, res, next) => {
   try {
+    console.log("START VOTE");
+    console.log(req.body);
     const { agenda_item_id } = req.body;
     if (!agenda_item_id) {
       res.status(400).json({ error: "agenda_item_id parameter is missing" });
@@ -144,7 +183,7 @@ const start_vote = async (req, res, next) => {
     const options = {
       upsert: true,
     };
-    const data = await controllers.Agenda.update({
+    const data = await controllers.Agenda.updateVote({
       filter,
       updateDoc,
       options,
@@ -171,7 +210,7 @@ const close_vote = async (req, res, next) => {
     const options = {
       upsert: true,
     };
-    const data = await controllers.Agenda.update({
+    const data = await controllers.Agenda.updateVote({
       filter,
       updateDoc,
       options,
@@ -200,9 +239,14 @@ const do_vote = async (req, res, next) => {
       res.status(401).end();
       return;
     }
+
     const filter = { _id: agenda_id };
     let tmp = [];
-    if (agenda.vote_info == "null")
+    if (
+      agenda.vote_info == "null" ||
+      agenda.vote_info == null ||
+      agenda.vote_info == ""
+    )
       tmp.push({ user_id: user_id, decision: decision });
     else {
       tmp = JSON.parse(agenda.vote_info);
@@ -211,14 +255,16 @@ const do_vote = async (req, res, next) => {
     const updateDoc = {
       $set: { vote_info: JSON.stringify(tmp) },
     };
+
     const options = {
       upsert: true,
     };
-    const data = await controllers.Agenda.update({
+    const data = await controllers.Agenda.updateVote({
       filter,
       updateDoc,
       options,
     });
+
     res.status(200).json({ data: data });
   } catch (err) {
     console.log(err.message);
@@ -244,7 +290,7 @@ const reset_vote = async (req, res, next) => {
     const options = {
       upsert: true,
     };
-    const data = await controllers.Agenda.update({
+    const data = await controllers.Agenda.updateVote({
       filter,
       updateDoc,
       options,
@@ -253,34 +299,6 @@ const reset_vote = async (req, res, next) => {
   } catch (err) {
     console.log(err.message);
     res.status(401).end();
-  }
-};
-const delete_agenda = async (req, res, next) => {
-  try {
-    const agenda_item_id = req.params.id;
-    if (!agenda_item_id) {
-      res.status(400).json({ error: "agenda_item_id parameter is missing" });
-      return;
-    }
-    const filter = { _id: agenda_item_id };
-    const result = await controllers.Agenda.delete({ filter });
-    if (result.deletedCount === 0) {
-      res.status(404).json({ error: "Agenda item not found" });
-      return;
-    }
-
-    const removedFromSession = controllers.Session.removeAgenda(agenda_item_id);
-
-    if (!removedFromSession) {
-      res.status(404).json({ error: "Agenda item not deleted from session" });
-      return;
-    }
-    res
-      .status(200)
-      .json({ status: 1, message: "Agenda item deleted successfully" });
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ error: "Internal server error" });
   }
 };
 
