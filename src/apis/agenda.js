@@ -235,10 +235,10 @@ const do_vote = async (req, res, next) => {
     let agenda = await controllers.Agenda.findOne({
       filter: { $eq: agenda_id },
     });
-    if (!agenda || agenda.vote_state == 2) {
-      res.status(401).end();
-      return;
-    }
+    // if (!agenda || agenda.vote_state == 2) {
+    //   res.status(401).end();
+    //   return;
+    // }
 
     const filter = { _id: agenda_id };
     let tmp = [];
