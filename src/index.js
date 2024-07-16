@@ -104,7 +104,7 @@ io.on("connection", (socket) => {
         vote_info: agenda.vote_info,
       };
       const options = { upsert: true };
-      await controllers.Agenda.update({ filter, updateDoc, options });
+      await controllers.Agenda.updateVote({ filter, updateDoc, options });
     } catch (error) {
       console.error("Error saving vote:", error);
     }
