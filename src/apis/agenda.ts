@@ -78,10 +78,10 @@ const do_vote = async (req: any, res: Response, next: NextFunction) => {
         // const { agenda_item_id } = req.body;
 
         let agenda = await controllers.Agenda.findOne({ filter: { $eq: agenda_id } });
-        if (agenda?.vote_state == 2) {
-            res.status(401).end();
-            return;
-        }
+        // if (agenda?.vote_state == 2) {
+        //     res.status(401).end();
+        //     return;
+        // }
         const filter = { _id: agenda_id }
         let tmp: any = [];
         console.log("🚀 ~ file: agenda.ts:84 ~ constdo_vote= ~ agenda!.vote_info:", agenda!.vote_info)
