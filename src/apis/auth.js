@@ -8,6 +8,9 @@ const crypto = require("crypto");
 
 const { LoginObject } = require("../interfaces/global");
 const controllers = require("../controllers");
+const Users = require("../models/users");
+const Sessions = require("../models/session");
+const Agenda = require("../models/agenda");
 
 const login = async (req, res) => {
   try {
@@ -94,6 +97,108 @@ const get_tv_users = async (req, res, next) => {
   }
 };
 
+// -------------------------------------------------
+// All users list
+// -------------------------------------------------
+
+const users_list = async (req, res ) => {
+  try {
+    const { page = 1, itemsPerPage = 10, search = "" } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    const itemsPerPageNumber = parseInt(itemsPerPage, 10);
+
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await Users.countDocuments(query);
+
+    const users = await Users.find(query)
+      .skip((pageNumber - 1) * itemsPerPageNumber)
+      .limit(itemsPerPageNumber);
+
+    res.status(200).json({
+      data: users,
+      totalItems: totalItems,
+      totalPages: Math.ceil(totalItems / itemsPerPageNumber),
+      currentPage: pageNumber,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// -------------------------------------------------
+// All sessions list
+// -------------------------------------------------
+
+const sessions_list = async (req, res ) => {
+  try {
+    const { page = 1, itemsPerPage = 10, search = "" } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    const itemsPerPageNumber = parseInt(itemsPerPage, 10);
+
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await Sessions.countDocuments(query);
+
+    const users = await Sessions.find(query)
+      .skip((pageNumber - 1) * itemsPerPageNumber)
+      .limit(itemsPerPageNumber);
+
+    res.status(200).json({
+      data: users,
+      totalItems: totalItems,
+      totalPages: Math.ceil(totalItems / itemsPerPageNumber),
+      currentPage: pageNumber,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// -------------------------------------------------
+// All agendas list
+// -------------------------------------------------
+
+const agendas_list = async (req, res ) => {
+  try {
+    const { page = 1, itemsPerPage = 10, search = "" } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    const itemsPerPageNumber = parseInt(itemsPerPage, 10);
+
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await Agenda.countDocuments(query);
+
+    const users = await Agenda.find(query)
+      .skip((pageNumber - 1) * itemsPerPageNumber)
+      .limit(itemsPerPageNumber);
+
+    res.status(200).json({
+      data: users,
+      totalItems: totalItems,
+      totalPages: Math.ceil(totalItems / itemsPerPageNumber),
+      currentPage: pageNumber,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const delete_user = async (req, res, next) => {
   try {
     const user_id = req.params.id;
@@ -168,4 +273,7 @@ module.exports = {
   get_tv_users,
   delete_user,
   updateUser,
+  users_list,
+  sessions_list,
+  agendas_list,
 };

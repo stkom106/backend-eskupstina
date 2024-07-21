@@ -41,4 +41,5 @@ const BasicSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("users", BasicSchema);
+const Users = mongoose.model("users", BasicSchema);
+module.exports = Users;
