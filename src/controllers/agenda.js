@@ -3,7 +3,7 @@ const controllers = require("../controllers");
 
 const Agenda = {
   create: async (props) => {
-    const { name, description, pdf, agenda_type, session_id } = props;
+    const { name, description, pdf, agenda_type, session_id, position } = props;
     try {
       const newData = new AgendaSchema({
         name: name,
@@ -11,6 +11,7 @@ const Agenda = {
         pdf_path: pdf,
         agenda_type: agenda_type,
         session_id: session_id,
+        position: position
       });
 
       const saveData = await newData.save();
@@ -122,6 +123,14 @@ const Agenda = {
       throw new Error(err.message);
     }
   },
+  count: async (props) => {
+    try {
+        let count = await AgendaSchema.countDocuments();
+        return count;
+    } catch (error) {
+        throw new Error(err.message);
+    }
+  }
 };
 
 module.exports = Agenda;

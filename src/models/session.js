@@ -11,10 +11,10 @@ const sessionSchema = new Schema({
     type: String,
     default: "",
   },
-  end_time: {
-    type: String,
-    default: "",
-  },
+//   end_time: {
+//     type: String,
+//     default: "",
+//   },
   status: {
     type: Boolean,
     default: false,

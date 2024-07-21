@@ -32,6 +32,9 @@ const BasicSchema = new Schema({
     type: String,
     default: "",
   },
+  position: {
+    type: Number
+  }
 });
 
 module.exports = mongoose.model("agenda", BasicSchema);
