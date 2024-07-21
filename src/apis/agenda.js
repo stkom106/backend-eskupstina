@@ -30,7 +30,7 @@ const createAgenda = async (req, res) => {
         }
       );
     });
-    let counts = await controllers.Agenda.count()
+    let counts = await controllers.Agenda.count({session_id:session})
     // Create agenda in database
     const pdf_path = blobName; // Use blob name as PDF path
     const agenda = await controllers.Agenda.create({
@@ -113,6 +113,26 @@ const get_agenda = async (req, res, next) => {
     res.status(401).end();
   }
 };
+
+// get_agenda
+const get_agendas = async (req, res, next) => {
+    try {
+      const { id, agenda_type, session_id } = req.query;
+      const filter = {}
+      if(agenda_type){
+        filter['agenda_type'] = agenda_type
+      }
+      if( session_id ){
+        filter['session_id'] = session_id
+      }
+      const agendas = await controllers.Agenda.find({filter});
+      console.log('ag',agendas.length)
+      res.status(200).json({ data: agendas });
+    } catch (err) {
+      console.log(err.message);
+      res.status(401).end();
+    }
+  };
 
 // show_pdf
 const show_pdf = async (req, res, next) => {
@@ -314,5 +334,6 @@ module.exports = {
   updateAgenda,
   do_vote,
   reset_vote,
+  get_agendas,
   delete_agenda, // Add the delete_agenda function to module exports
 };

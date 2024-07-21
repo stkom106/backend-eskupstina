@@ -35,7 +35,7 @@ const BasicSchema = new Schema({
   position: {
     type: Number
   }
-});
+},{timestamps:true});
 
 const Agenda  = mongoose.model("agenda", BasicSchema);
 module.exports = Agenda;

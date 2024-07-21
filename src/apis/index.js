@@ -12,6 +12,7 @@ const API = (router) => {
   });
   router.post("/login", AUTH.login);
   router.get("/get_agenda", Agenda.get_agenda);
+  router.get("/get_all_agendas", Agenda.get_agendas);
   router.post("/agenda", upload.single("pdf_path"), Agenda.createAgenda);
   router.get("/get_agenda_by_id", Vote.get_vote);
   router.post("/users", AUTH.get_users);

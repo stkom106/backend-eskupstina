@@ -100,7 +100,7 @@ const Agenda = {
   find: async (props) => {
     const { filter } = props;
     try {
-      const result = await AgendaSchema.find(filter);
+      const result = await AgendaSchema.find(filter).sort({position:1});
       return result;
     } catch (err) {
       throw new Error(err.message);
@@ -108,7 +108,7 @@ const Agenda = {
   },
   findAll: async () => {
     try {
-      const allSessions = await AgendaSchema.find();
+      const allSessions = await AgendaSchema.find().sort({position:1});
       return allSessions;
     } catch (err) {
       throw new Error(err.message);
@@ -125,7 +125,7 @@ const Agenda = {
   },
   count: async (props) => {
     try {
-        let count = await AgendaSchema.countDocuments();
+        let count = await AgendaSchema.countDocuments(props);
         return count;
     } catch (error) {
         throw new Error(err.message);
