@@ -37,4 +37,5 @@ const BasicSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("agenda", BasicSchema);
+const Agenda  = mongoose.model("agenda", BasicSchema);
+module.exports = Agenda;

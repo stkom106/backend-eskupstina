@@ -22,4 +22,6 @@ const sessionSchema = new Schema({
   agendas: [{ type: Schema.Types.ObjectId, ref: "agenda" }], // Array of agenda references
 });
 
-module.exports = mongoose.model("session", sessionSchema);
+const Sessions = mongoose.model("session", sessionSchema);
+
+module.exports = Sessions;
