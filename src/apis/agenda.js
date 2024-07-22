@@ -270,10 +270,10 @@ const do_vote = async (req, res, next) => {
     });
 
     await AgendaSchema.updateOne(
-      filter,
+      { _id : agenda_id },
       {
         $push : {
-          voter : {
+          voters : {
             user : user_id,
             decision : decision
           }
