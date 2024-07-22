@@ -37,7 +37,7 @@ const Agenda = {
   },
 
   update: async (props) => {
-    const { name, description, agenda_type, session_id, id, pdf } = props;
+    const { name, description, agenda_type, session_id, id, pdf, position } = props;
     try {
       const agenda = await AgendaSchema.findOne({ _id: id });
       if (!agenda) {
@@ -48,6 +48,7 @@ const Agenda = {
       agenda.description = description || agenda.description;
       agenda.agenda_type = agenda_type || agenda.agenda_type;
       agenda.pdf_path = pdf || agenda.pdf_path;
+      agenda.position = position || agenda.position;
 
       if (agenda.session_id.toString() != session_id.toString()) {
         if (session_id == "undefined") {

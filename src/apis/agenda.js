@@ -117,13 +117,16 @@ const get_agenda = async (req, res, next) => {
 // get_agenda
 const get_agendas = async (req, res, next) => {
     try {
-      const { id, agenda_type, session_id } = req.query;
+      const { id, agenda_type, session_id, search } = req.query;
       const filter = {}
       if(agenda_type){
         filter['agenda_type'] = agenda_type
       }
       if( session_id ){
         filter['session_id'] = session_id
+      }
+      if( search ){
+        filter['name'] = new RegExp(search, "i")
       }
       const agendas = await controllers.Agenda.find({filter});
       console.log('ag',agendas.length)
