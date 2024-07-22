@@ -101,9 +101,9 @@ const get_tv_users = async (req, res, next) => {
 // All users list
 // -------------------------------------------------
 
-const users_list = async (req, res ) => {
+const users_list = async (req, res) => {
   try {
-    const { page = 1, itemsPerPage = 10, search = "" } = req.query;
+    const { page = 1, itemsPerPage = 10, search = "", sort = "createdAt" } = req.query;
 
     const pageNumber = parseInt(page, 10);
     const itemsPerPageNumber = parseInt(itemsPerPage, 10);
@@ -113,9 +113,15 @@ const users_list = async (req, res ) => {
       query.name = { $regex: search, $options: "i" };
     }
 
-    const totalItems = await Users.countDocuments(query);
+    const sortQuery = {};
+    if (sort) {
+      sortQuery[sort] =  1;
+    }
 
+    const totalItems = await Users.countDocuments(query);
+    console.log()
     const users = await Users.find(query)
+      .sort(sortQuery)
       .skip((pageNumber - 1) * itemsPerPageNumber)
       .limit(itemsPerPageNumber);
 
@@ -130,6 +136,7 @@ const users_list = async (req, res ) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 // -------------------------------------------------
 // All sessions list
@@ -183,7 +190,7 @@ const agendas_list = async (req, res ) => {
 
     const totalItems = await Agenda.countDocuments(query);
 
-    const users = await Agenda.find(query)
+    const users = await Agenda.find(query).populate('voters.user')
       .skip((pageNumber - 1) * itemsPerPageNumber)
       .limit(itemsPerPageNumber);
 

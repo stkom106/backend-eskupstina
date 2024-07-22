@@ -32,6 +32,15 @@ const BasicSchema = new Schema({
     type: String,
     default: "",
   },
+  voters: {
+    user : {
+      type : mongoose.Types.ObjectId,
+      ref : "users"
+    },
+    decision : {
+      type : Number,
+    }
+  },
 });
 
 const Agenda  = mongoose.model("agenda", BasicSchema);
