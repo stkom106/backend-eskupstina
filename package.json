@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./src/index.js",
     "start:dev": "nodemon",
-    "serve": "nodemon ./serve.ts",
+    "serve": "nodemon ./src/index.js",
     "build": "tsc"
   },
   "dependencies": {
