@@ -166,7 +166,7 @@ const sessions_list = async (req, res ) => {
     }
 
     const users = await Sessions.find(query)
-      .sort(sortQuery)
+      // .sort(sortQuery)
       .skip((pageNumber - 1) * itemsPerPageNumber)
       .limit(itemsPerPageNumber);
 
