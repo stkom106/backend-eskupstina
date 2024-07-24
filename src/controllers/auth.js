@@ -11,9 +11,7 @@ const Auth = {
         role: role,
         city: city,
         party: party,
-        createdAt: new Date(),
       });
-
       const saveData = await newData.save();
 
       if (!saveData) {
