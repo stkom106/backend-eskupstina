@@ -3,7 +3,7 @@ const controllers = require("../controllers");
 
 const Agenda = {
   create: async (props) => {
-    const { name, description, pdf, agenda_type, session_id } = props;
+    const { name, description, pdf, agenda_type, session_id, position } = props;
     try {
       const newData = new AgendaSchema({
         name: name,
@@ -11,6 +11,7 @@ const Agenda = {
         pdf_path: pdf,
         agenda_type: agenda_type,
         session_id: session_id,
+        position: position
       });
 
       const saveData = await newData.save();
@@ -36,7 +37,7 @@ const Agenda = {
   },
 
   update: async (props) => {
-    const { name, description, agenda_type, session_id, id, pdf } = props;
+    const { name, description, agenda_type, session_id, id, pdf, position } = props;
     try {
       const agenda = await AgendaSchema.findOne({ _id: id });
       if (!agenda) {
@@ -47,6 +48,7 @@ const Agenda = {
       agenda.description = description || agenda.description;
       agenda.agenda_type = agenda_type || agenda.agenda_type;
       agenda.pdf_path = pdf || agenda.pdf_path;
+      agenda.position = position || agenda.position;
 
       if (agenda.session_id.toString() != session_id.toString()) {
         if (session_id == "undefined") {
@@ -101,7 +103,7 @@ const Agenda = {
   find: async (props) => {
     const { filter } = props;
     try {
-      const result = await AgendaSchema.find(filter);
+      const result = await AgendaSchema.find(filter).sort({position:1});
       return result;
     } catch (err) {
       throw new Error(err.message);
@@ -109,7 +111,7 @@ const Agenda = {
   },
   findAll: async () => {
     try {
-      const allSessions = await AgendaSchema.find();
+      const allSessions = await AgendaSchema.find().sort({position:1});
       return allSessions;
     } catch (err) {
       throw new Error(err.message);
@@ -124,6 +126,14 @@ const Agenda = {
       throw new Error(err.message);
     }
   },
+  count: async (props) => {
+    try {
+        let count = await AgendaSchema.countDocuments(props);
+        return count;
+    } catch (error) {
+        throw new Error(err.message);
+    }
+  }
 };
 
 module.exports = Agenda;

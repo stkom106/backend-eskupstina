@@ -10,7 +10,7 @@ const blobService = azure.createBlobService(
 const createAgenda = async (req, res) => {
   try {
     // Retrieve other form data
-    const { title, description, agenda_type, session } = req.body;
+    const { title, description, agenda_type, session, position } = req.body;
 
     // Handle file
     const { buffer, originalname } = req.file;
@@ -31,7 +31,7 @@ const createAgenda = async (req, res) => {
         }
       );
     });
-
+    let counts = await controllers.Agenda.count({session_id:session})
     // Create agenda in database
     const pdf_path = blobName; // Use blob name as PDF path
     const agenda = await controllers.Agenda.create({
@@ -40,6 +40,7 @@ const createAgenda = async (req, res) => {
       pdf: pdf_path,
       agenda_type: agenda_type,
       session_id: session,
+      position: position || counts+1
     });
 
     res.status(200).json({ data: agenda });
@@ -51,11 +52,12 @@ const createAgenda = async (req, res) => {
 
 const updateAgenda = async (req, res) => {
   try {
-    const { title, description, agenda_type, session } = req.body;
+    const { title, description, agenda_type, session, position } = req.body;
     const { id } = req.query;
 
     let pdf_path;
     if (req.file) {
+        console.log('check',req.file)
       const { buffer, originalname } = req.file;
       const blobName = originalname;
       await new Promise((resolve, reject) => {
@@ -86,6 +88,7 @@ const updateAgenda = async (req, res) => {
       session_id: session,
       id: id,
       pdf: pdf_path,
+      position
     });
 
     res.status(200).json({ status: 1, data: agenda });
@@ -111,6 +114,29 @@ const get_agenda = async (req, res, next) => {
     res.status(401).end();
   }
 };
+
+// get_agenda
+const get_agendas = async (req, res, next) => {
+    try {
+      const { id, agenda_type, session_id, search } = req.query;
+      const filter = {}
+      if(agenda_type){
+        filter['agenda_type'] = agenda_type
+      }
+      if( session_id ){
+        filter['session_id'] = session_id
+      }
+      if( search ){
+        filter['name'] = new RegExp(search, "i")
+      }
+      const agendas = await controllers.Agenda.find({filter});
+      console.log('ag',agendas.length)
+      res.status(200).json({ data: agendas });
+    } catch (err) {
+      console.log(err.message);
+      res.status(401).end();
+    }
+  };
 
 // show_pdf
 const show_pdf = async (req, res, next) => {
@@ -327,5 +353,6 @@ module.exports = {
   updateAgenda,
   do_vote,
   reset_vote,
+  get_agendas,
   delete_agenda, // Add the delete_agenda function to module exports
 };

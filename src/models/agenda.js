@@ -32,6 +32,9 @@ const BasicSchema = new Schema({
     type: String,
     default: "",
   },
+  position: {
+    type: Number
+  },
   voters: {
     user : {
       type : mongoose.Types.ObjectId,
@@ -41,7 +44,8 @@ const BasicSchema = new Schema({
       type : Number,
     }
   },
-});
+},{timestamps:true});
+  
 
 const Agenda  = mongoose.model("agenda", BasicSchema);
 module.exports = Agenda;

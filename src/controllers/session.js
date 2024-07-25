@@ -46,7 +46,7 @@ const Session = {
 
   findAll: async () => {
     try {
-      const allSessions = await SessionSchema.find();
+      const allSessions = (await SessionSchema.find().sort({_id:-1}));
       return allSessions;
     } catch (err) {
       throw new Error(err.message);
