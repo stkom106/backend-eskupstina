@@ -12,6 +12,7 @@ const Users = require("../models/users");
 const Sessions = require("../models/session");
 const Agenda = require("../models/agenda");
 const mongoose = require("mongoose");
+const { AgendaSchema } = require("../models");
 
 const login = async (req, res) => {
   try {
@@ -286,6 +287,46 @@ const updateUser = async (req, res) => {
   } catch (error) {
     console.error("Error processing file upload:", error);
     res.status(500).json({ error: "Error processing file upload" });
+  }
+};
+
+const agendas_vote = async (req, res ) => {
+  try {
+   
+    const {userId, page = 1, itemsPerPage = 10, search = "", sort } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    const itemsPerPageNumber = parseInt(itemsPerPage, 10);
+
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    const totalItems = await Agenda.countDocuments(query);
+
+    const sortQuery = {};
+    if (sort) {
+      sortQuery[sort] =  1;
+    } else {
+      sortQuery['createdAt'] = -1;
+    }
+
+    const users = await Agenda.find(query).populate('voters.user')
+      // .sort(sortQuery)
+      .skip((pageNumber - 1) * itemsPerPageNumber)
+      .limit(itemsPerPageNumber);
+
+    res.status(200).json({
+      data: users,
+      totalItems: totalItems,
+      totalPages: Math.ceil(totalItems / itemsPerPageNumber),
+      currentPage: pageNumber,
+    });
+
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

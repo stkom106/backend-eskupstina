@@ -37,6 +37,8 @@ const API = (router) => {
   router.get("/users/list", AUTH.users_list);
   router.get("/sessions/list", AUTH.sessions_list);
   router.get("/agendas/list", AUTH.agendas_list);
+  router.get("/agendavote/list/:userId", AUTH.agendas_list);
+
 
 };
 
