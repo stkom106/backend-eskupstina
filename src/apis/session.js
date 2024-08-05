@@ -37,7 +37,8 @@ const updateSession = async (req, res) => {
 // get_all_sessions
 const get_all_sessions = async (req, res) => {
   try {
-    const sessions = await controllers.Session.findAll();
+    const year = req?.query?.year
+    const sessions = await controllers.Session.findAll(year);
     const agendas = (await controllers.Agenda.findAll());
 
     // New array to store organized data

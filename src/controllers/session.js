@@ -44,9 +44,17 @@ const Session = {
     }
   },
 
-  findAll: async () => {
+  findAll: async (year) => {
     try {
       const allSessions = (await SessionSchema.find().sort({_id:-1}));
+
+      if (year) {
+        const filteredSessions = allSessions.filter((session) => {
+          const sessionYear = new Date(session?.start_time).getFullYear().toString();
+          return sessionYear === year;
+        });
+        return filteredSessions;
+      }
       return allSessions;
     } catch (err) {
       throw new Error(err.message);
